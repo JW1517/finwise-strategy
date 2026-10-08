@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinWise onboarding prototype</title>
+<style>
+:root{--bg:#f4f6f5;--card:#fff;--ink:#14231f;--mute:#5d6e68;--line:#dfe6e3;--brand:#0f7a5c;--brand-d:#0a5a44;--tint:#e4f4ee;--warn:#b45309;--warn-bg:#fdf1de;--bad:#b42318}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1513;--card:#17211e;--ink:#eaf2ef;--mute:#9db0a9;--line:#2a3a35;--brand:#2fbf93;--brand-d:#7fe0bf;--tint:#173a2f;--warn:#f0b254;--warn-bg:#3a2d12;--bad:#f27a70}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;display:flex;justify-content:center;padding:16px}
+.app{width:100%;max-width:420px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:4px 0 16px}
+.logo{font-weight:700;letter-spacing:-.02em;color:var(--brand)}
+.dots{display:flex;gap:6px}.dots i{width:22px;height:4px;border-radius:2px;background:var(--line)}.dots i.on{background:var(--brand)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+h1{font-size:22px;line-height:1.25;margin:0 0 6px;letter-spacing:-.01em}
+p.sub{margin:0 0 18px;color:var(--mute);font-size:15px}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+input[type=email]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+.detected{display:flex;gap:8px;align-items:center;background:var(--tint);color:var(--brand-d);border-radius:10px;padding:8px 12px;font-size:14px;margin-top:10px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px;font:inherit;font-size:14px;text-align:left;cursor:pointer;min-height:56px}
+.chip b{display:block;font-size:14px}.chip span{color:var(--mute);font-size:12px}
+.chip.sel{border-color:var(--brand);background:var(--tint);box-shadow:0 0 0 1px var(--brand)}
+.btn{width:100%;margin-top:18px;padding:14px;border:0;border-radius:12px;background:var(--brand);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.dark-text .btn{color:#06241b}
+@media (prefers-color-scheme:dark){.btn{color:#06241b}}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.link{display:block;text-align:center;margin-top:12px;color:var(--mute);font-size:14px;background:none;border:0;width:100%;cursor:pointer;text-decoration:underline;font-family:inherit}
+.bank{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px;margin-bottom:8px;font:inherit;cursor:pointer;text-align:left}
+.bank .ic{width:34px;height:34px;border-radius:8px;background:var(--tint);color:var(--brand-d);display:grid;place-items:center;font-weight:700;font-size:13px}
+.bank small{color:var(--mute);display:block;font-size:12px}
+.safe{font-size:12px;color:var(--mute);margin-top:10px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:18px 0 10px}.bar i{display:block;height:100%;width:0;background:var(--brand);transition:width .35s}
+.steps li{color:var(--mute);font-size:14px;list-style:none;padding:3px 0}.steps li.done{color:var(--ink)}.steps li.done:before{content:"✓ ";color:var(--brand)}.steps{padding:0;margin:0}
+.big{font-size:40px;font-weight:700;letter-spacing:-.02em;margin:2px 0}
+.delta{font-size:13px;color:var(--brand-d)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.kpi{background:var(--bg);border-radius:10px;padding:10px}.kpi small{color:var(--mute);font-size:12px;display:block}.kpi b{font-size:17px}
+.flag{background:var(--warn-bg);border-radius:12px;padding:12px;font-size:14px;margin-top:6px}
+.flag b{color:var(--warn)}
+.flag .chips{margin-top:10px;grid-template-columns:repeat(3,1fr)}.flag .chip{min-height:0;padding:8px;text-align:center}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-of-type{border-bottom:0}
+.tog{width:44px;height:26px;border-radius:13px;background:var(--line);border:0;position:relative;cursor:pointer;flex:none}
+.tog:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.tog.on{background:var(--brand)}.tog.on:after{left:21px}
+.done-card{text-align:center;padding:28px 20px}
+.done-card .ok{width:56px;height:56px;border-radius:50%;background:var(--tint);color:var(--brand-d);display:grid;place-items:center;font-size:28px;margin:0 auto 12px}
+.nav{display:flex;justify-content:space-between;margin-top:14px}
+.nav button{background:none;border:0;color:var(--mute);font:inherit;font-size:13px;cursor:pointer}
+.screen{display:none}.screen.on{display:block}
+.note{font-size:12px;color:var(--mute);text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="logo">FinWise</div><div class="dots" id="dots"><i></i><i></i><i></i><i></i></div></div>
+
+  <section class="screen on" id="s1">
+    <div class="card">
+      <h1>Let's get you a clear view of your money</h1>
+      <p class="sub">Two minutes to your first cash forecast. Premium features are open for 14 days.</p>
+      <label for="em">Work email</label>
+      <input id="em" type="email" value="maria@brightsidebakery.com">
+      <div class="detected">✨ We found <b>&nbsp;Brightside Bakery&nbsp;</b> · Food &amp; beverage · Austin, TX</div>
+      <label>What do you want most?</label>
+      <div class="chips" id="goals">
+        <button class="chip" data-g="cash"><b>See my cash</b><span>Where I stand today</span></button>
+        <button class="chip" data-g="forecast"><b>Forecast ahead</b><span>Next 30 days</span></button>
+        <button class="chip" data-g="invoices"><b>Get paid faster</b><span>Track invoices</span></button>
+        <button class="chip" data-g="tax"><b>Prep for tax</b><span>Clean books</span></button>
+      </div>
+      <button class="btn" id="b1" disabled>Continue</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s2">
+    <div class="card">
+      <h1>Connect your business account</h1>
+      <p class="sub">We'll build your cash picture from your real transactions. Read-only access; disconnect anytime.</p>
+      <button class="bank" data-b="Chase"><span class="ic">CH</span><span><b>Chase Business</b><small>Most common in Austin, TX</small></span></button>
+      <button class="bank" data-b="Bank of America"><span class="ic">BA</span><span><b>Bank of America</b></span></button>
+      <button class="bank" data-b="QuickBooks"><span class="ic">QB</span><span><b>QuickBooks Online</b><small>Import existing books</small></span></button>
+      <button class="link" id="csv">Upload a CSV instead</button>
+      <div class="safe">🔒 Bank-level encryption. We never move money.</div>
+      <button class="link" id="sample">Not ready? Explore with a sample business</button>
+    </div>
+    <div class="card" id="loading" style="display:none">
+      <h1 id="lt">Importing your transactions…</h1>
+      <p class="sub">Building your first picture.</p>
+      <div class="bar"><i id="pb"></i></div>
+      <ul class="steps" id="st">
+        <li>Connected securely</li><li>Imported 214 transactions</li><li>Categorized 96% automatically</li><li>Built your 30-day outlook</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="screen" id="s3">
+    <div class="card">
+      <p class="sub" id="aha-lead" style="margin-bottom:4px">Here's where Brightside Bakery stands today</p>
+      <div class="big">$42,380</div>
+      <div class="delta">▲ $3,120 vs. last month · 3 accounts</div>
+      <div class="kpis">
+        <div class="kpi"><small>Money in (30d)</small><b>$28,450</b></div>
+        <div class="kpi"><small>Money out (30d)</small><b>$25,330</b></div>
+        <div class="kpi"><small>Owed to you</small><b>$6,200</b></div>
+        <div class="kpi"><small>Bills due soon</small><b>$4,870</b></div>
+      </div>
+      <small style="color:var(--mute)">Next 30 days: expected balance</small>
+      <svg viewBox="0 0 340 110" width="100%" role="img" aria-label="Cash forecast rising from 42 thousand to 47 thousand dollars over 30 days, with a dip around day 12">
+        <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0f7a5c" stop-opacity=".25"/><stop offset="1" stop-color="#0f7a5c" stop-opacity="0"/></linearGradient></defs>
+        <path d="M0 62 L40 58 L80 52 L120 80 L160 74 L200 56 L240 46 L280 38 L340 30 L340 110 L0 110Z" fill="url(#g)"/>
+        <path d="M0 62 L40 58 L80 52 L120 80 L160 74 L200 56 L240 46 L280 38 L340 30" fill="none" stroke="#0f7a5c" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="120" cy="80" r="4" fill="#b45309"/><text x="126" y="98" font-size="11" fill="#b45309">Day 12: rent + payroll</text>
+        <text x="298" y="22" font-size="11" fill="#0f7a5c" font-weight="700">$47.2k</text>
+      </svg>
+      <div class="flag" id="flag">
+        <b>1 item needs a look</b><br>$1,240 paid to “SQ *GRAINCO” on Sep 28. What was it?
+        <div class="chips"><button class="chip">Ingredients</button><button class="chip">Equipment</button><button class="chip">Other</button></div>
+      </div>
+      <button class="btn" id="b3">Looks right</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s4">
+    <div class="card">
+      <h1>Keep this picture fresh</h1>
+      <p class="sub">Two optional things. Both take one tap.</p>
+      <div class="row"><div><b>Weekly cash summary</b><br><small style="color:var(--mute)">Mondays at 8:00 AM</small></div><button class="tog on" id="t1" aria-label="Weekly summary"></button></div>
+      <div class="row"><div><b>Share with your accountant</b><br><small style="color:var(--mute)">View-only access</small></div><button class="tog" id="t2" aria-label="Share with accountant"></button></div>
+      <button class="btn" id="b4">Go to my dashboard</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s5">
+    <div class="card done-card">
+      <div class="ok">✓</div>
+      <h1>You're in, Maria</h1>
+      <p class="sub">Your dashboard is live with 14 days of premium open. We'll show you what stays free before the trial ends.</p>
+      <button class="btn" id="restart">Restart prototype</button>
+    </div>
+  </section>
+
+  <div class="nav"><button id="back">← Back</button><button id="fwd">Skip ahead →</button></div>
+  <div class="note">Prototype · sample data · all names fictional</div>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let cur=1, goal=null;
+function show(n){
+  cur=Math.max(1,Math.min(5,n));
+  $$('.screen').forEach(s=>s.classList.remove('on'));
+  $('#s'+cur).classList.add('on');
+  $$('#dots i').forEach((d,i)=>d.classList.toggle('on',i<Math.min(cur,4)));
+  $('#back').style.visibility=cur>1?'visible':'hidden';
+  $('#fwd').style.visibility=cur<5?'visible':'hidden';
+  window.scrollTo(0,0);
+}
+$$('#goals .chip').forEach(c=>c.onclick=()=>{
+  $$('#goals .chip').forEach(x=>x.classList.remove('sel'));
+  c.classList.add('sel'); goal=c.dataset.g; $('#b1').disabled=false;
+});
+$('#b1').onclick=()=>{
+  const lead={cash:"Here's where Brightside Bakery stands today",forecast:"Here's where Brightside Bakery is headed",invoices:"Here's what you're owed, and where you stand",tax:"Here's your books, already sorted"};
+  $('#aha-lead').textContent=lead[goal]||lead.cash; show(2);
+};
+function runImport(label){
+  $$('#s2 .card')[0].style.display='none'; $('#loading').style.display='block';
+  $('#lt').textContent=label; const li=$$('#st li'); li.forEach(x=>x.classList.remove('done')); $('#pb').style.width='0';
+  li.forEach((x,i)=>setTimeout(()=>{x.classList.add('done');$('#pb').style.width=((i+1)*25)+'%'},500*(i+1)));
+  setTimeout(()=>{show(3);$$('#s2 .card')[0].style.display='block';$('#loading').style.display='none'},500*li.length+500);
+}
+$$('.bank').forEach(b=>b.onclick=()=>runImport('Connecting to '+b.dataset.b+'…'));
+$('#csv').onclick=()=>runImport('Reading your CSV…');
+$('#sample').onclick=()=>runImport('Loading a sample business…');
+$$('#flag .chip').forEach(c=>c.onclick=()=>{
+  $('#flag').innerHTML='<b>✓ Done</b> · Categorized as '+c.textContent.toLowerCase()+'. Nothing else needs a look.';
+});
+$('#b3').onclick=()=>show(4);
+['t1','t2'].forEach(id=>$('#'+id).onclick=e=>e.currentTarget.classList.toggle('on'));
+$('#b4').onclick=()=>show(5);
+$('#restart').onclick=()=>{location.reload()};
+$('#back').onclick=()=>show(cur-1);
+$('#fwd').onclick=()=>{ if(cur===1&&!goal){ $('#goals .chip').click(); } show(cur+1); };
+show(1);
+</script>
+</body>
+</html>
