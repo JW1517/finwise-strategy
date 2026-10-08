@@ -4,18 +4,24 @@
 
 ## Growth hypothesis
 
-_The core belief: if we do X, then Y, because Z._
+FinWise's biggest growth problem is _(not filled in)_, because _(not filled in)_.
+
+_Working notes: _(not filled in)_ Evidence: _(not filled in)_ Against the data: _(not filled in)__
 
 _____
 
 ## The bet
 
-_Where you focus, and what you're deliberately NOT doing._
+_(not filled in)_
+
+**Not doing:** _(not filled in)_
 
 _____
 
 ## Growth loop
 
-_A link or image of the loop that compounds (acquisition → activation → retention → referral)._
+**Loop type:** _(not filled in)_, _(not filled in)_
+
+_(no diagram uploaded yet, upload one above)_
 
 _____
